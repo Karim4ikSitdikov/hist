@@ -30,19 +30,9 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
             text-align: center;
         }
-        h1 {
-            font-size: 2.4em;
-            margin-bottom: 10px;
-        }
-        h2 {
-            font-size: 1.8em;
-            margin-bottom: 25px;
-        }
-        p.subtitle {
-            font-size: 1.2em;
-            margin-bottom: 30px;
-            opacity: 0.9;
-        }
+        h1 { font-size: 2.4em; margin-bottom: 10px; }
+        p.subtitle { font-size: 1.2em; margin-bottom: 30px; opacity: 0.9; }
+
         .options-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -57,15 +47,36 @@
             transition: all 0.3s ease;
             font-size: 1.4em;
             font-weight: bold;
+            position: relative;
         }
-        .option-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-5px);
+        .option-btn:hover { background: rgba(255, 255, 255, 0.3); transform: translateY(-5px); }
+        .option-btn.selected { background: #ff9800; transform: scale(1.05); }
+        .record-label {
+            font-size: 0.8em;
+            margin-top: 8px;
+            opacity: 0.9;
+            font-weight: normal;
         }
-        .option-btn.selected {
-            background: #ff9800;
-            transform: scale(1.05);
+
+        /* Таблица рекордов */
+        .records-table {
+            width: 100%;
+            margin: 30px 0;
+            border-collapse: collapse;
+            font-size: 1.1em;
         }
+        .records-table th, .records-table td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        .records-table th {
+            background: rgba(255,255,255,0.1);
+        }
+        .records-table td {
+            text-align: center;
+        }
+        .no-record { opacity: 0.6; }
+
         .quiz-option {
             background: rgba(255, 255, 255, 0.15);
             padding: 18px;
@@ -76,19 +87,11 @@
             text-align: left;
             font-size: 1.2em;
         }
-        .quiz-option:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-3px);
-        }
-        .quiz-option.selected {
-            background: #ff9800;
-        }
-        .quiz-option.correct {
-            background: #4caf50;
-        }
-        .quiz-option.wrong {
-            background: #f44336;
-        }
+        .quiz-option:hover { background: rgba(255, 255, 255, 0.3); transform: translateY(-3px); }
+        .quiz-option.selected { background: #ff9800; }
+        .quiz-option.correct { background: #4caf50; }
+        .quiz-option.wrong { background: #f44336; }
+
         button {
             background: #ff9800;
             color: white;
@@ -97,66 +100,68 @@
             font-size: 1.3em;
             border-radius: 10px;
             cursor: pointer;
-            margin-top: 25px;
+            margin: 15px 10px;
             transition: 0.3s;
-            min-width: 200px;
+            min-width: 180px;
         }
-        button:hover {
-            background: #f57c00;
+        button:hover { background: #f57c00; }
+        button:disabled { background: #666; cursor: not-allowed; }
+        button.secondary {
+            background: #555;
         }
-        button:disabled {
-            background: #666;
-            cursor: not-allowed;
-        }
-        progress {
-            width: 100%;
-            height: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-        }
-        #feedback {
-            font-size: 1.4em;
-            margin: 20px 0;
-            min-height: 50px;
-        }
-        #result-screen p {
-            font-size: 1.5em;
-            line-height: 1.6;
-        }
-        .record {
-            font-size: 1.1em;
-            margin-top: 20px;
-            opacity: 0.9;
-        }
+        button.secondary:hover { background: #777; }
 
-        /* Мобильная адаптация */
+        progress { width: 100%; height: 20px; border-radius: 10px; margin: 20px 0; }
+        #feedback { font-size: 1.4em; margin: 20px 0; min-height: 50px; }
+        #result-screen p { font-size: 1.5em; line-height: 1.6; margin-bottom: 30px; }
+        .new-record { color:#4caf50; font-weight:bold; font-size:1.4em; margin: 20px 0; }
+
         @media (max-width: 768px) {
             h1 { font-size: 2em; }
-            h2 { font-size: 1.5em; }
-            p.subtitle { font-size: 1.1em; }
             .option-btn { font-size: 1.2em; padding: 16px; }
+            .record-label { font-size: 0.75em; }
+            .records-table { font-size: 1em; }
+            .records-table th, .records-table td { padding: 10px 8px; }
             .quiz-option { font-size: 1.1em; padding: 16px; }
             #feedback { font-size: 1.2em; }
-            #result-screen p { font-size: 1.3em; }
-            button { font-size: 1.2em; padding: 14px 25px; }
+            button { font-size: 1.2em; padding: 14px 25px; margin: 10px; }
             .card { padding: 25px 15px; }
         }
         @media (max-width: 480px) {
             h1 { font-size: 1.8em; }
-            .option-btn { font-size: 1.1em; }
-            .options-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .options-grid { grid-template-columns: repeat(2, 1fr); }
+            button { min-width: 140px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Стартовый экран -->
+        <!-- Главная страница -->
         <div id="start-screen" class="card">
             <h1>Квиз по истории</h1>
             <p class="subtitle">70 увлекательных вопросов по мировой истории</p>
-            <p style="font-size:1.3em; margin-bottom:20px;">Выбери количество вопросов:</p>
+
+            <p style="font-size:1.3em; margin:25px 0 15px;">Выбери количество вопросов:</p>
             <div class="options-grid" id="num-questions"></div>
-            <div class="record" id="best-record" style="display:none;"></div>
+
+            <!-- Таблица рекордов -->
+            <div style="margin-top: 40px;">
+                <h2 style="font-size:1.6em; margin-bottom:15px;">Твои рекорды</h2>
+                <table class="records-table" id="records-table">
+                    <thead>
+                        <tr>
+                            <th>Вопросов</th>
+                            <th>Рекорд</th>
+                            <th>Процент</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Заполняется JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <button id="start-btn">Начать квиз</button>
         </div>
 
         <!-- Экран квиза -->
@@ -174,7 +179,8 @@
         <div id="result-screen" class="card" style="display: none;">
             <h1>Квиз завершён!</h1>
             <p id="final-result"></p>
-            <div class="record" id="new-record" style="display:none; color:#4caf50; font-weight:bold;"></div>
+            <div class="new-record" id="new-record" style="display:none;">🎉 Новый рекорд! 🎉</div>
+            <button onclick="goToMain()">На главную</button>
             <button onclick="location.reload()">Играть снова</button>
         </div>
     </div>
@@ -201,7 +207,55 @@
             { question: "Кто был первым президентом США, родившимся в больнице?", options: ["Джимми Картер", "Рональд Рейган", "Джордж Буш-старший", "Билл Клинтон"], correct: 0 },
             { question: "Какой президент подписал Прокламацию об освобождении?", options: ["Авраам Линкольн", "Улисс Грант", "Эндрю Джонсон", "Джеймс Бьюкенен"], correct: 0 },
             { question: "В каком году была подписана Декларация независимости?", options: ["1776", "1775", "1781", "1774"], correct: 0 },
-            // ... (остальные 50 вопросов — те же, что и в предыдущей версии, я их не обрезаю)
+            { question: "Кто был первым президентом, подвергшимся импичменту?", options: ["Эндрю Джонсон", "Билл Клинтон", "Ричард Никсон", "Джон Тайлер"], correct: 0 },
+            { question: "Какой штат первым вышел из Союза?", options: ["Южная Каролина", "Миссисипи", "Алабама", "Джорджия"], correct: 0 },
+            { question: "Какой был первый федеральный праздник в США?", options: ["Новый год", "День независимости", "День благодарения", "Рождество"], correct: 0 },
+            { question: "Кто был самым молодым человеком, ставшим президентом США?", options: ["Теодор Рузвельт", "Джон Ф. Кеннеди", "Джо Байден", "Билл Клинтон"], correct: 0 },
+            { question: "В каком году была опубликована первая американская газета?", options: ["1690", "1704", "1720", "1750"], correct: 0 },
+            { question: "В каком городе родился Юлий Цезарь?", options: ["Рим", "Галлия", "Александрия", "Афины"], correct: 0 },
+            { question: "Кто написал картину «Смерть Сократа»?", options: ["Жак Луи Давид", "Эжен Делакруа", "Теодор Жерико", "Жан Огюст Ингр"], correct: 0 },
+            { question: "Какую эпоху называют периодом «возрождения» после Средневековья?", options: ["Ренессанс", "Просвещение", "Барокко", "Романтизм"], correct: 0 },
+            { question: "Кто является основателем Коммунистической партии?", options: ["Ленин", "Карл Маркс", "Иосиф Сталин", "Лев Троцкий"], correct: 0 },
+            { question: "В каком городе находятся самые высокие исторические памятники?", options: ["Дели", "Рим", "Пекин", "Каир"], correct: 0 },
+            { question: "Кто известен как основоположник научного социализма?", options: ["Карл Маркс", "Фридрих Энгельс", "Владимир Ленин", "Михаил Бакунин"], correct: 0 },
+            { question: "Где Чёрная смерть нанесла наибольший ущерб?", options: ["Европа", "Азия", "Африка", "Америка"], correct: 0 },
+            { question: "Кто открыл бактерию Yersinia pestis?", options: ["Александр Йерсен", "Луи Пастер", "Роберт Кох", "Александр Флеминг"], correct: 0 },
+            { question: "Где Александр Йерсен провёл последние годы жизни?", options: ["Вьетнам", "Франция", "Швейцария", "Индия"], correct: 0 },
+            { question: "Какая азиатская страна была членом стран Оси во Второй мировой войне?", options: ["Япония", "Китай", "Индия", "Таиланд"], correct: 0 },
+            { question: "Какая страна была среди союзников во Второй мировой войне?", options: ["США", "Германия", "Италия", "Япония"], correct: 0 },
+            { question: "Когда произошёл Холокост?", options: ["Во время Второй мировой войны", "Во время Первой мировой войны", "В XIX веке", "В Средневековье"], correct: 0 },
+            { question: "Когда началась и закончилась Вторая мировая война?", options: ["1939–1945", "1914–1918", "1941–1945", "1937–1945"], correct: 0 },
+            { question: "Кто стал лидером СССР после Ленина?", options: ["Иосиф Сталин", "Никита Хрущёв", "Лев Троцкий", "Георгий Маленков"], correct: 0 },
+            { question: "Как изначально называлась организация НАТО?", options: ["Североатлантический договор", "Варшавский договор", "Европейский союз", "Лига Наций"], correct: 0 },
+            { question: "В какие годы длилась Холодная война?", options: ["1947–1991", "1945–1989", "1950–1990", "1939–1945"], correct: 0 },
+            { question: "Кто стал президентом США после убийства Авраама Линкольна?", options: ["Эндрю Джонсон", "Улисс Грант", "Эндрю Джексон", "Джеймс Гарфилд"], correct: 0 },
+            { question: "Какая страна входила в Французский Индокитай?", options: ["Вьетнам", "Таиланд", "Малайзия", "Индонезия"], correct: 0 },
+            { question: "Кто был лидером Кубы почти 50 лет?", options: ["Фидель Кастро", "Рауль Кастро", "Че Гевара", "Фульхенсио Батиста"], correct: 0 },
+            { question: "Какая династия считается Золотым веком Китая?", options: ["Династия Тан", "Династия Хань", "Династия Мин", "Династия Цин"], correct: 0 },
+            { question: "Какой король Таиланда помог стране избежать колонизации?", options: ["Чулалонгкорн (Рама V)", "Монгкут (Рама IV)", "Рама I", "Рама IX"], correct: 0 },
+            { question: "Кто была самой могущественной женщиной Византийской империи?", options: ["Императрица Феодора", "Ирина Афинская", "Пульхерия", "Евдокия"], correct: 0 },
+            { question: "В каком океане затонул Титаник?", options: ["Атлантический океан", "Тихий океан", "Индийский океан", "Северный Ледовитый океан"], correct: 0 },
+            { question: "В каком году была разрушена Берлинская стена?", options: ["1989", "1990", "1991", "1985"], correct: 0 },
+            { question: "Кто произнёс речь «У меня есть мечта»?", options: ["Мартин Лютер Кинг-мл.", "Малкольм Икс", "Джесси Джексон", "Розы Паркс"], correct: 0 },
+            { question: "Кто известен как «Человек из крови и железа»?", options: ["Отто фон Бисмарк", "Наполеон Бонапарт", "Уинстон Черчилль", "Адольф Гитлер"], correct: 0 },
+            { question: "В какой стране была издана первая в мире газета?", options: ["Германия", "Китай", "Италия", "Англия"], correct: 0 },
+            { question: "Кто из древнегреческих драматургов считается мастером языка (по ошибочному утверждению в источнике)?", options: ["Аристофан", "Софокл", "Эсхил", "Еврипид"], correct: 0 },
+            { question: "Как исторически называют Египет?", options: ["Дар Нила", "Колыбель цивилизации", "Страна двух рек", "Земля фараонов"], correct: 0 },
+            { question: "Сколько дней было в неделе в раннем Древнем Риме?", options: ["8 дней", "7 дней", "10 дней", "5 дней"], correct: 0 },
+            { question: "Как называют книгу цитат Мао Цзэ-дуна?", options: ["Маленькая красная книга", "Красный манифест", "Большая красная книга", "Цитаты председателя"], correct: 0 },
+            { question: "В каком году закончилась война 1812 года?", options: ["1815", "1812", "1814", "1816"], correct: 0 },
+            { question: "В каком году был сыгран первый Суперкубок?", options: ["1967", "1966", "1968", "1970"], correct: 0 },
+            { question: "В каком году примерно изобрели телевидение (по источнику)?", options: ["1972", "1927", "1950", "1900"], correct: 0 },
+            { question: "Какой город считался крупнейшим в древнем мире в своё время?", options: ["Вавилон", "Рим", "Афины", "Карфаген"], correct: 0 },
+            { question: "В каком облике Зевс соблазнил Леду?", options: ["Лебедя", "Быка", "Золотого дождя", "Орла"], correct: 0 },
+            { question: "Кто автор картины «Мона Лиза»?", options: ["Леонардо да Винчи", "Микеланджело", "Рафаэль", "Рембрандт"], correct: 0 },
+            { question: "Кто известен как «Отец истории»?", options: ["Геродот", "Фукидид", "Плутарх", "Ксенофонт"], correct: 0 },
+            { question: "Где по мифу обитал Минотавр?", options: ["В центре Лабиринта", "На Олимпе", "В Аиде", "В Тартаре"], correct: 0 },
+            { question: "Александр Македонский был царём какой страны по происхождению?", options: ["Македонии", "Рима", "Персии", "Египта"], correct: 0 },
+            { question: "Платон и Аристотель были философами какой древней цивилизации?", options: ["Древней Греции", "Древнего Рима", "Древнего Египта", "Древней Персии"], correct: 0 },
+            { question: "Какое из семи чудес света древнего мира сохранилось до наших дней?", options: ["Пирамиды Гизы", "Висячие сады Вавилона", "Кол осс Родосский", "Маяк в Александрии"], correct: 0 },
+            { question: "Какое чудо света имеет неизвестное точное местоположение?", options: ["Висячие сады Вавилона", "Храм Артемиды в Эфесе", "Статуя Зевса в Олимпии", "Мавзолей в Галикарнасе"], correct: 0 },
+            { question: "Что буквально означает древнеегипетское слово «фараон»?", options: ["Большой дом", "Сын солнца", "Бог на земле", "Владыка двух земель"], correct: 0 },
             { question: "Новое царство Древнего Египта известно как период расцвета искусства?", options: ["Да", "Нет, это Старое царство", "Нет, это Среднее царство", "Нет, это Поздний период"], correct: 0 }
         ];
 
@@ -212,37 +266,48 @@
         let score = 0;
         let selectedOption = null;
 
-        // Инициализация стартового экрана
+        // Заполнение кнопок выбора количества
         const numContainer = document.getElementById('num-questions');
         numOptions.forEach(num => {
             const btn = document.createElement('div');
             btn.classList.add('option-btn');
-            btn.innerText = num;
+            btn.innerHTML = `${num}<div class="record-label" id="label-${num}"></div>`;
             btn.onclick = () => {
                 document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
                 btn.classList.add('selected');
                 selectedNum = num;
-                showBestRecord(num);
             };
             numContainer.appendChild(btn);
         });
-        // По умолчанию выбираем 70
-        document.querySelectorAll('.option-btn')[6].classList.add('selected');
-        showBestRecord(70);
+        document.querySelector('.option-btn:last-child').classList.add('selected'); // 70 по умолчанию
 
-        function showBestRecord(num) {
-            const best = localStorage.getItem(`best_${num}`);
-            const recordEl = document.getElementById('best-record');
-            if (best) {
-                recordEl.style.display = 'block';
-                recordEl.innerHTML = `Твой рекорд на ${num} вопросов: <strong>${best}</strong>`;
-            } else {
-                recordEl.style.display = 'none';
-            }
+        // Отображение таблицы рекордов
+        function updateRecordsTable() {
+            const tbody = document.querySelector('#records-table tbody');
+            tbody.innerHTML = '';
+            numOptions.forEach(num => {
+                const best = localStorage.getItem(`best_${num}`);
+                const percent = best ? Math.round((best / num) * 100) + '%' : '—';
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><strong>${num}</strong></td>
+                    <td>${best || '<span class="no-record">—</span>'}</td>
+                    <td>${percent}</td>
+                `;
+                tbody.appendChild(row);
+
+                // Также обновляем подпись под кнопкой
+                const label = document.getElementById(`label-${num}`);
+                if (best) {
+                    label.innerText = `Рекорд: ${best} (${percent})`;
+                } else {
+                    label.innerText = 'Нет рекорда';
+                }
+            });
         }
 
-        function startQuiz() {
-            // Выбираем случайные вопросы
+        // Старт квиза
+        document.getElementById('start-btn').onclick = function() {
             questions = [...fullQuestions];
             shuffle(questions);
             questions = questions.slice(0, selectedNum);
@@ -252,14 +317,13 @@
             currentQuestion = 0;
             score = 0;
             showQuestion();
-        }
+        };
 
-        // Добавляем кнопку "Начать" на стартовый экран
-        const startScreen = document.getElementById('start-screen');
-        const startBtn = document.createElement('button');
-        startBtn.innerText = 'Начать квиз';
-        startBtn.onclick = startQuiz;
-        startScreen.appendChild(startBtn);
+        function goToMain() {
+            document.getElementById('result-screen').style.display = 'none';
+            document.getElementById('start-screen').style.display = 'block';
+            updateRecordsTable(); // Обновляем рекорды при возврате
+        }
 
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
@@ -278,7 +342,7 @@
             const shuffledOptions = [...q.options];
             shuffle(shuffledOptions);
 
-            shuffledOptions.forEach((option, index) => {
+            shuffledOptions.forEach(option => {
                 const div = document.createElement('div');
                 div.classList.add('quiz-option');
                 div.innerText = option;
@@ -304,14 +368,13 @@
             document.getElementById('next-btn').disabled = false;
         }
 
-        function nextQuestion() {
+        document.getElementById('next-btn').onclick = function() {
             if (!selectedOption) return;
 
             const q = questions[currentQuestion];
             const correctAnswer = q.options[q.correct];
 
-            const options = document.querySelectorAll('.quiz-option');
-            options.forEach(opt => {
+            document.querySelectorAll('.quiz-option').forEach(opt => {
                 opt.style.pointerEvents = 'none';
                 if (opt.innerText === correctAnswer) opt.classList.add('correct');
                 if (opt.innerText === selectedOption && selectedOption !== correctAnswer) opt.classList.add('wrong');
@@ -320,21 +383,23 @@
             if (selectedOption === correctAnswer) {
                 score++;
                 document.getElementById('feedback').innerHTML = '<span style="color:#4caf50;">Правильно!</span>';
-                document.getElementById('score').innerText = score;
             } else {
                 document.getElementById('feedback').innerHTML = `<span style="color:#f44336;">Неправильно.<br>Правильный ответ: ${correctAnswer}</span>`;
             }
+            document.getElementById('score').innerText = score;
 
             currentQuestion++;
+
             if (currentQuestion >= questions.length) {
-                setTimeout(showResult, 1800);
+                this.disabled = true;
+                setTimeout(showResult, 2000);
             } else {
-                document.getElementById('next-btn').innerText = 'Следующий вопрос';
-                document.getElementById('next-btn').onclick = () => {
+                this.innerText = 'Следующий вопрос';
+                this.onclick = () => {
                     showQuestion();
                 };
             }
-        }
+        };
 
         function showResult() {
             document.getElementById('quiz-screen').style.display = 'none';
@@ -350,18 +415,18 @@
             document.getElementById('final-result').innerHTML = 
                 `Твой результат: <strong>${score} из ${selectedNum}</strong> (${percent}%)<br><br>${comment}`;
 
-            // Сохранение рекорда
             const key = `best_${selectedNum}`;
             const best = localStorage.getItem(key);
             if (!best || score > parseInt(best)) {
                 localStorage.setItem(key, score);
                 document.getElementById('new-record').style.display = 'block';
-                document.getElementById('new-record').innerText = '🎉 Новый рекорд! 🎉';
             }
+
+            updateRecordsTable(); // На всякий случай обновим и здесь
         }
 
-        // Подключаем кнопку "Далее"
-        document.getElementById('next-btn').onclick = nextQuestion;
+        // Инициализация таблицы рекордов при загрузке
+        updateRecordsTable();
     </script>
 </body>
 </html>
