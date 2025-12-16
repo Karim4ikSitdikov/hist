@@ -17,11 +17,7 @@
             justify-content: center;
             padding: 10px;
         }
-        .container {
-            max-width: 900px;
-            width: 100%;
-            margin: 20px auto;
-        }
+        .container { max-width: 900px; width: 100%; margin: 20px auto; }
         .card {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
@@ -58,7 +54,6 @@
             font-weight: normal;
         }
 
-        /* Таблица рекордов */
         .records-table {
             width: 100%;
             margin: 30px 0;
@@ -69,12 +64,8 @@
             padding: 12px;
             border-bottom: 1px solid rgba(255,255,255,0.2);
         }
-        .records-table th {
-            background: rgba(255,255,255,0.1);
-        }
-        .records-table td {
-            text-align: center;
-        }
+        .records-table th { background: rgba(255,255,255,0.1); }
+        .records-table td { text-align: center; }
         .no-record { opacity: 0.6; }
 
         .quiz-option {
@@ -106,9 +97,7 @@
         }
         button:hover { background: #f57c00; }
         button:disabled { background: #666; cursor: not-allowed; }
-        button.secondary {
-            background: #555;
-        }
+        button.secondary { background: #555; }
         button.secondary:hover { background: #777; }
 
         progress { width: 100%; height: 20px; border-radius: 10px; margin: 20px 0; }
@@ -121,11 +110,9 @@
             .option-btn { font-size: 1.2em; padding: 16px; }
             .record-label { font-size: 0.75em; }
             .records-table { font-size: 1em; }
-            .records-table th, .records-table td { padding: 10px 8px; }
             .quiz-option { font-size: 1.1em; padding: 16px; }
             #feedback { font-size: 1.2em; }
             button { font-size: 1.2em; padding: 14px 25px; margin: 10px; }
-            .card { padding: 25px 15px; }
         }
         @media (max-width: 480px) {
             h1 { font-size: 1.8em; }
@@ -136,7 +123,7 @@
 </head>
 <body>
     <div class="container">
-        <!-- Главная страница -->
+        <!-- Главная -->
         <div id="start-screen" class="card">
             <h1>Квиз по истории</h1>
             <p class="subtitle">70 увлекательных вопросов по мировой истории</p>
@@ -144,27 +131,20 @@
             <p style="font-size:1.3em; margin:25px 0 15px;">Выбери количество вопросов:</p>
             <div class="options-grid" id="num-questions"></div>
 
-            <!-- Таблица рекордов -->
             <div style="margin-top: 40px;">
                 <h2 style="font-size:1.6em; margin-bottom:15px;">Твои рекорды</h2>
                 <table class="records-table" id="records-table">
                     <thead>
-                        <tr>
-                            <th>Вопросов</th>
-                            <th>Рекорд</th>
-                            <th>Процент</th>
-                        </tr>
+                        <tr><th>Вопросов</th><th>Рекорд</th><th>Процент</th></tr>
                     </thead>
-                    <tbody>
-                        <!-- Заполняется JS -->
-                    </tbody>
+                    <tbody></tbody>
                 </table>
             </div>
 
             <button id="start-btn">Начать квиз</button>
         </div>
 
-        <!-- Экран квиза -->
+        <!-- Квиз -->
         <div id="quiz-screen" class="card" style="display: none;">
             <h2 id="question"></h2>
             <div id="options"></div>
@@ -175,12 +155,12 @@
             <button id="next-btn" disabled>Далее</button>
         </div>
 
-        <!-- Экран результата -->
+        <!-- Результат -->
         <div id="result-screen" class="card" style="display: none;">
             <h1>Квиз завершён!</h1>
             <p id="final-result"></p>
             <div class="new-record" id="new-record" style="display:none;">🎉 Новый рекорд! 🎉</div>
-            <button onclick="goToMain()">На главную</button>
+            <button class="secondary" onclick="goToMain()">На главную</button>
             <button onclick="location.reload()">Играть снова</button>
         </div>
     </div>
@@ -266,7 +246,7 @@
         let score = 0;
         let selectedOption = null;
 
-        // Заполнение кнопок выбора количества
+        // Кнопки выбора количества
         const numContainer = document.getElementById('num-questions');
         numOptions.forEach(num => {
             const btn = document.createElement('div');
@@ -279,35 +259,30 @@
             };
             numContainer.appendChild(btn);
         });
-        document.querySelector('.option-btn:last-child').classList.add('selected'); // 70 по умолчанию
+        document.querySelector('.option-btn:last-child').classList.add('selected');
 
-        // Отображение таблицы рекордов
+        // Таблица и подписи рекордов
         function updateRecordsTable() {
             const tbody = document.querySelector('#records-table tbody');
             tbody.innerHTML = '';
             numOptions.forEach(num => {
                 const best = localStorage.getItem(`best_${num}`);
                 const percent = best ? Math.round((best / num) * 100) + '%' : '—';
-                const row = document.createElement('tr');
-                row.innerHTML = `
+                const row = `<tr>
                     <td><strong>${num}</strong></td>
                     <td>${best || '<span class="no-record">—</span>'}</td>
                     <td>${percent}</td>
-                `;
-                tbody.appendChild(row);
+                </tr>`;
+                tbody.innerHTML += row;
 
-                // Также обновляем подпись под кнопкой
                 const label = document.getElementById(`label-${num}`);
-                if (best) {
-                    label.innerText = `Рекорд: ${best} (${percent})`;
-                } else {
-                    label.innerText = 'Нет рекорда';
-                }
+                label.innerText = best ? `Рекорд: ${best} (${percent})` : 'Нет рекорда';
             });
         }
+        updateRecordsTable();
 
-        // Старт квиза
-        document.getElementById('start-btn').onclick = function() {
+        // Старт
+        document.getElementById('start-btn').onclick = () => {
             questions = [...fullQuestions];
             shuffle(questions);
             questions = questions.slice(0, selectedNum);
@@ -322,7 +297,7 @@
         function goToMain() {
             document.getElementById('result-screen').style.display = 'none';
             document.getElementById('start-screen').style.display = 'block';
-            updateRecordsTable(); // Обновляем рекорды при возврате
+            updateRecordsTable();
         }
 
         function shuffle(array) {
@@ -356,7 +331,6 @@
             document.getElementById('score').innerText = score;
             document.getElementById('feedback').innerHTML = '';
             document.getElementById('next-btn').disabled = true;
-            document.getElementById('next-btn').innerText = 'Далее';
             selectedOption = null;
         }
 
@@ -368,18 +342,21 @@
             document.getElementById('next-btn').disabled = false;
         }
 
-        document.getElementById('next-btn').onclick = function() {
+        // ИСПРАВЛЕННАЯ ЛОГИКА КНОПКИ "ДАЛЕЕ"
+        document.getElementById('next-btn').addEventListener('click', function handleNext() {
             if (!selectedOption) return;
 
             const q = questions[currentQuestion];
             const correctAnswer = q.options[q.correct];
 
+            // Подсветка ответов
             document.querySelectorAll('.quiz-option').forEach(opt => {
                 opt.style.pointerEvents = 'none';
                 if (opt.innerText === correctAnswer) opt.classList.add('correct');
                 if (opt.innerText === selectedOption && selectedOption !== correctAnswer) opt.classList.add('wrong');
             });
 
+            // Обратная связь и счёт
             if (selectedOption === correctAnswer) {
                 score++;
                 document.getElementById('feedback').innerHTML = '<span style="color:#4caf50;">Правильно!</span>';
@@ -391,15 +368,14 @@
             currentQuestion++;
 
             if (currentQuestion >= questions.length) {
+                // Последний вопрос
                 this.disabled = true;
                 setTimeout(showResult, 2000);
             } else {
-                this.innerText = 'Следующий вопрос';
-                this.onclick = () => {
-                    showQuestion();
-                };
+                // Следующий вопрос — просто готовим новый
+                showQuestion();
             }
-        };
+        });
 
         function showResult() {
             document.getElementById('quiz-screen').style.display = 'none';
@@ -422,11 +398,8 @@
                 document.getElementById('new-record').style.display = 'block';
             }
 
-            updateRecordsTable(); // На всякий случай обновим и здесь
+            updateRecordsTable();
         }
-
-        // Инициализация таблицы рекордов при загрузке
-        updateRecordsTable();
     </script>
 </body>
 </html>
